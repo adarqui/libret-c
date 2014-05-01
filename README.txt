@@ -40,6 +40,8 @@ TODO:
 
 	The only issue with both of the above 'features' will be some of the size of the ret_t struct.
 
+	IMPORTANT: retain backward compatibility with what is already in place, ie: RET_V, RET_V2, RET_V3, ... RET_Vn
+
 
 --------------
 
