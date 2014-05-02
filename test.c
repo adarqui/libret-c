@@ -17,6 +17,7 @@ void libret_test__e(void);
 void libret_test_ok(void);
 void libret_test_error(void);
 void libret_test_fatal(void);
+void libret_test_break(void);
 void libret_test_ok_only(void);
 void libret_test_error_only(void);
 void libret_test_fatal_only(void);
@@ -24,6 +25,7 @@ void libret_test_fatal_only(void);
 ret_t libret_ok(void);
 ret_t libret_error(void);
 ret_t libret_fatal(void);
+ret_t libret_break(void);
 
 ret_t libret_ok_only(void);
 ret_t libret_error_only(void);
@@ -51,6 +53,7 @@ void libret_init(CU_pSuite p) {
 	CU_add_test(p, "test RET_OK", libret_test_ok);
 	CU_add_test(p, "test RET_ERROR", libret_test_error);
 	CU_add_test(p, "test RET_FATAL", libret_test_fatal);
+	CU_add_test(p, "test RET_BREAK", libret_test_break);
 	CU_add_test(p, "test RET_OK_ONLY", libret_test_ok_only);
 	CU_add_test(p, "test RET_ERROR_ONLY", libret_test_error_only);
 	CU_add_test(p, "test RET_FATAL_ONLY", libret_test_fatal_only);
@@ -121,18 +124,22 @@ void libret_test_ok(void) {
 	CU_ASSERT(RET_ISOK == RET_BOOL_TRUE);
 	CU_ASSERT(RET_ISERROR == RET_BOOL_FALSE);
 	CU_ASSERT(RET_ISFATAL == RET_BOOL_FALSE);
+	CU_ASSERT(RET_ISBREAK == RET_BOOL_FALSE);
 
 	CU_ASSERT(_RET_ISOK(_r) == RET_BOOL_TRUE);
 	CU_ASSERT(_RET_ISERROR(_r) == RET_BOOL_FALSE);
 	CU_ASSERT(_RET_ISFATAL(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_RET_ISBREAK(_r) == RET_BOOL_FALSE);
 
 	CU_ASSERT(ret_isok == RET_BOOL_TRUE);
 	CU_ASSERT(ret_iserror == RET_BOOL_FALSE);
 	CU_ASSERT(ret_isfatal == RET_BOOL_FALSE);
+	CU_ASSERT(ret_isbreak == RET_BOOL_FALSE);
 
 	CU_ASSERT(_ret_isok(_r) == RET_BOOL_TRUE);
 	CU_ASSERT(_ret_iserror(_r) == RET_BOOL_FALSE);
 	CU_ASSERT(_ret_isfatal(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_ret_isbreak(_r) == RET_BOOL_FALSE);
 }
 
 void libret_test_error(void) {
@@ -142,18 +149,22 @@ void libret_test_error(void) {
 	CU_ASSERT(RET_ISOK == RET_BOOL_FALSE);
 	CU_ASSERT(RET_ISERROR == RET_BOOL_TRUE);
 	CU_ASSERT(RET_ISFATAL == RET_BOOL_FALSE);
+	CU_ASSERT(RET_ISBREAK == RET_BOOL_FALSE);
 
 	CU_ASSERT(_RET_ISOK(_r) == RET_BOOL_FALSE);
 	CU_ASSERT(_RET_ISERROR(_r) == RET_BOOL_TRUE);
 	CU_ASSERT(_RET_ISFATAL(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_RET_ISBREAK(_r) == RET_BOOL_FALSE);
 
 	CU_ASSERT(ret_isok == RET_BOOL_FALSE);
 	CU_ASSERT(ret_iserror == RET_BOOL_TRUE);
 	CU_ASSERT(ret_isfatal == RET_BOOL_FALSE);
+	CU_ASSERT(ret_isbreak == RET_BOOL_FALSE);
 
 	CU_ASSERT(_ret_isok(_r) == RET_BOOL_FALSE);
 	CU_ASSERT(_ret_iserror(_r) == RET_BOOL_TRUE);
 	CU_ASSERT(_ret_isfatal(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_ret_isbreak(_r) == RET_BOOL_FALSE);
 }
 
 void libret_test_fatal(void) {
@@ -163,19 +174,49 @@ void libret_test_fatal(void) {
 	CU_ASSERT(RET_ISOK == RET_BOOL_FALSE);
 	CU_ASSERT(RET_ISERROR == RET_BOOL_TRUE);
 	CU_ASSERT(RET_ISFATAL == RET_BOOL_TRUE);
+	CU_ASSERT(RET_ISBREAK == RET_BOOL_FALSE);
 
 	CU_ASSERT(_RET_ISOK(_r) == RET_BOOL_FALSE);
 	CU_ASSERT(_RET_ISERROR(_r) == RET_BOOL_TRUE);
 	CU_ASSERT(_RET_ISFATAL(_r) == RET_BOOL_TRUE);
+	CU_ASSERT(_RET_ISBREAK(_r) == RET_BOOL_FALSE);
 
 	CU_ASSERT(ret_isok == RET_BOOL_FALSE);
 	CU_ASSERT(ret_iserror == RET_BOOL_TRUE);
 	CU_ASSERT(ret_isfatal == RET_BOOL_TRUE);
+	CU_ASSERT(ret_isbreak == RET_BOOL_FALSE);
 
 	CU_ASSERT(_ret_isok(_r) == RET_BOOL_FALSE);
 	CU_ASSERT(_ret_iserror(_r) == RET_BOOL_TRUE);
 	CU_ASSERT(_ret_isfatal(_r) == RET_BOOL_TRUE);
+	CU_ASSERT(_ret_isbreak(_r) == RET_BOOL_FALSE);
 }
+
+void libret_test_break(void) {
+	RET_INIT;
+	_r = libret_break();
+
+	CU_ASSERT(RET_ISOK == RET_BOOL_FALSE);
+	CU_ASSERT(RET_ISERROR == RET_BOOL_FALSE);
+	CU_ASSERT(RET_ISFATAL == RET_BOOL_FALSE);
+	CU_ASSERT(RET_ISBREAK == RET_BOOL_TRUE);
+
+	CU_ASSERT(_RET_ISOK(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_RET_ISERROR(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_RET_ISFATAL(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_RET_ISBREAK(_r) == RET_BOOL_TRUE);
+
+	CU_ASSERT(ret_isok == RET_BOOL_FALSE);
+	CU_ASSERT(ret_iserror == RET_BOOL_FALSE);
+	CU_ASSERT(ret_isfatal == RET_BOOL_FALSE);
+	CU_ASSERT(ret_isbreak == RET_BOOL_TRUE);
+
+	CU_ASSERT(_ret_isok(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_ret_iserror(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_ret_isfatal(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_ret_isbreak(_r) == RET_BOOL_TRUE);
+}
+
 
 void libret_test_ok_only(void) {
 	RET_INIT;
@@ -184,18 +225,22 @@ void libret_test_ok_only(void) {
 	CU_ASSERT(RET_ISOK == RET_BOOL_TRUE);
 	CU_ASSERT(RET_ISERROR == RET_BOOL_FALSE);
 	CU_ASSERT(RET_ISFATAL == RET_BOOL_FALSE);
+	CU_ASSERT(RET_ISBREAK == RET_BOOL_FALSE);
 
 	CU_ASSERT(_RET_ISOK(_r) == RET_BOOL_TRUE);
 	CU_ASSERT(_RET_ISERROR(_r) == RET_BOOL_FALSE);
 	CU_ASSERT(_RET_ISFATAL(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_RET_ISBREAK(_r) == RET_BOOL_FALSE);
 
 	CU_ASSERT(ret_isok == RET_BOOL_TRUE);
 	CU_ASSERT(ret_iserror == RET_BOOL_FALSE);
 	CU_ASSERT(ret_isfatal == RET_BOOL_FALSE);
+	CU_ASSERT(ret_isbreak == RET_BOOL_FALSE);
 
 	CU_ASSERT(_ret_isok(_r) == RET_BOOL_TRUE);
 	CU_ASSERT(_ret_iserror(_r) == RET_BOOL_FALSE);
 	CU_ASSERT(_ret_isfatal(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_ret_isbreak(_r) == RET_BOOL_FALSE);
 }
 
 void libret_test_error_only(void) {
@@ -205,18 +250,22 @@ void libret_test_error_only(void) {
 	CU_ASSERT(RET_ISOK == RET_BOOL_FALSE);
 	CU_ASSERT(RET_ISERROR == RET_BOOL_TRUE);
 	CU_ASSERT(RET_ISFATAL == RET_BOOL_FALSE);
+	CU_ASSERT(RET_ISBREAK == RET_BOOL_FALSE);
 
 	CU_ASSERT(_RET_ISOK(_r) == RET_BOOL_FALSE);
 	CU_ASSERT(_RET_ISERROR(_r) == RET_BOOL_TRUE);
 	CU_ASSERT(_RET_ISFATAL(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_RET_ISBREAK(_r) == RET_BOOL_FALSE);
 
 	CU_ASSERT(ret_isok == RET_BOOL_FALSE);
 	CU_ASSERT(ret_iserror == RET_BOOL_TRUE);
 	CU_ASSERT(ret_isfatal == RET_BOOL_FALSE);
+	CU_ASSERT(ret_isbreak == RET_BOOL_FALSE);
 
 	CU_ASSERT(_ret_isok(_r) == RET_BOOL_FALSE);
 	CU_ASSERT(_ret_iserror(_r) == RET_BOOL_TRUE);
 	CU_ASSERT(_ret_isfatal(_r) == RET_BOOL_FALSE);
+	CU_ASSERT(_ret_isbreak(_r) == RET_BOOL_FALSE);
 }
 
 void libret_test_fatal_only(void) {
@@ -226,18 +275,22 @@ void libret_test_fatal_only(void) {
 	CU_ASSERT(RET_ISOK == RET_BOOL_FALSE);
 	CU_ASSERT(RET_ISERROR == RET_BOOL_TRUE);
 	CU_ASSERT(RET_ISFATAL == RET_BOOL_TRUE);
+	CU_ASSERT(RET_ISBREAK == RET_BOOL_FALSE);
 
 	CU_ASSERT(_RET_ISOK(_r) == RET_BOOL_FALSE);
 	CU_ASSERT(_RET_ISERROR(_r) == RET_BOOL_TRUE);
 	CU_ASSERT(_RET_ISFATAL(_r) == RET_BOOL_TRUE);
+	CU_ASSERT(_RET_ISBREAK(_r) == RET_BOOL_FALSE);
 
 	CU_ASSERT(ret_isok == RET_BOOL_FALSE);
 	CU_ASSERT(ret_iserror == RET_BOOL_TRUE);
 	CU_ASSERT(ret_isfatal == RET_BOOL_TRUE);
+	CU_ASSERT(ret_isbreak == RET_BOOL_FALSE);
 
 	CU_ASSERT(_ret_isok(_r) == RET_BOOL_FALSE);
 	CU_ASSERT(_ret_iserror(_r) == RET_BOOL_TRUE);
 	CU_ASSERT(_ret_isfatal(_r) == RET_BOOL_TRUE);
+	CU_ASSERT(_ret_isbreak(_r) == RET_BOOL_FALSE);
 }
 
 ret_t libret_ok(void) {
@@ -254,6 +307,11 @@ ret_t libret_fatal(void) {
 	ret_t hi;
 	_RET_FATAL(hi, "hi");
 	return hi;
+}
+
+ret_t libret_break(void) {
+	RET_INIT;
+	RET_BREAK;
 }
 
 ret_t libret_ok_only(void) {

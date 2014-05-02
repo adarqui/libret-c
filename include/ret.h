@@ -9,7 +9,8 @@ typedef enum {
 	RET_NONE = 0x00,
 	RET_STATUS_OK = 0x01,
 	RET_STATUS_ERROR = 0x02,
-	RET_STATUS_FATAL = 0x04
+	RET_STATUS_FATAL = 0x04,
+	RET_STATUS_BREAK = 0x08
 } RET_STATUS_t;
 
 typedef enum {
@@ -63,6 +64,7 @@ typedef struct ret {
 #define _RET_UNSET_V3(__r) { __r.v3 = NULL ; __r.vbits &= ~RET_VBITS_3; }
 #define _RET_SET_E(__r, __e) __r.e = __e
 
+#define _RET_BREAK(__r) { __r.e = RET_STATUS_BREAK; return __r; }
 #define _RET_OK(__r, __v) { __r.v = __v; __r.e = RET_STATUS_OK; return __r; }
 #define _RET_OK1 _RET_OK
 #define _RET_OK2(__r, __v, __v2) { __r.v = __v; __r.v2 = __v2; __r.e = RET_STATUS_OK; return __r; }
@@ -96,6 +98,7 @@ typedef struct ret {
 #define _RET_ISOK(__r) ((__r.e & RET_STATUS_OK) > 0)
 #define _RET_ISERROR(__r) ((__r.e & RET_STATUS_ERROR) > 0)
 #define _RET_ISFATAL(__r) ((__r.e & RET_STATUS_FATAL) > 0)
+#define _RET_ISBREAK(__r) ((__r.e & RET_STATUS_BREAK) > 0)
 
 
 #define RET_CLR _RET_CLR(_r)
@@ -114,7 +117,7 @@ typedef struct ret {
 #define RET_UNSET_V3 _RET_UNSET_V3(_r)
 #define RET_SET_E(_e) _RET_SET_E(_r, _e)
 
-
+#define RET_BREAK _RET_BREAK(_r)
 #define RET_OK(_v) _RET_OK(_r, _v)
 #define RET_ERROR(_v) _RET_ERROR(_r, _v)
 #define RET_FATAL(_v) _RET_FATAL(_r, _v)
@@ -151,6 +154,7 @@ typedef struct ret {
 #define RET_ISOK _RET_ISOK(_r)
 #define RET_ISERROR _RET_ISERROR(_r)
 #define RET_ISFATAL _RET_ISFATAL(_r)
+#define RET_ISBREAK _RET_ISBREAK(_r)
 
 
 
@@ -174,6 +178,7 @@ typedef struct ret {
 #define _ret_unset_v3 _RET_UNSET_V3
 #define _ret_set_e _RET_SET_E
 
+#define _ret_break _RET_BREAK
 #define _ret_ok _RET_OK
 #define _ret_ok1 _RET_OK
 #define _ret_ok2 _RET_OK2
@@ -203,6 +208,7 @@ typedef struct ret {
 #define _ret_isok _RET_ISOK
 #define _ret_iserror _RET_ISERROR
 #define _ret_isfatal _RET_ISFATAL
+#define _ret_isbreak _RET_ISBREAK
 
 
 
@@ -222,6 +228,7 @@ typedef struct ret {
 #define ret_unset_v3 RET_UNSET_V3
 #define ret_set_e RET_SET_E
 
+#define ret_break RET_BREAK
 #define ret_ok RET_OK
 #define ret_ok1 RET_OK
 #define ret_ok2 RET_OK2
@@ -251,6 +258,7 @@ typedef struct ret {
 #define ret_isok RET_ISOK
 #define ret_iserror RET_ISERROR
 #define ret_isfatal RET_ISFATAL
+#define ret_isbreak RET_ISBREAK
 
 
 #endif
